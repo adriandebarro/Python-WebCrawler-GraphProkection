@@ -1,0 +1,109 @@
+import re
+import urllib
+import tokenize
+from urllib.request import urlopen
+#import networkx  as nx
+
+
+class WebCrawler:
+
+
+    def __init__(self, url):
+        self.StartingUrl = url
+        self.toVisit = {}
+        self.toVisit[url] = url
+        self.UrlsToVisit = [url]
+        self.Visited = {}
+
+        
+    def _getNewUrl(self):
+        """
+        returns a new url
+        """
+        currentUrl = self.UrlsToVisit[0]
+        logging.info("new url added ")
+        return (currentUrl, self.toVisit[currentUrl])
+
+    def _deleteVistedUrl(self, index):
+        """
+        Deletes a URL from dictioary
+        """
+        curUrl = self.UrlsToVisit[index]
+        log.info("new url added %s" %curUrl)
+        urlObject = self.toVisit[curUrl]
+        toVisit.pop(index)
+        del self.toVisit[curUrl]
+        return (curUrl,urlObject)
+        
+        
+
+    def _addUrlToVisit(self, url):
+        """
+        
+        """
+        self.UrlsToVisit.append(url)
+        self.toVisit[url] = url
+        
+
+    def _addVisitedUrl(self, url):
+        index = self.toVisit.index(url)
+        myList = deleteVistedUrl(index)
+        self.VistedUrl[myList[0]] = myList[1]
+
+    def checkIfInclded(self,url):
+        reuslt = False
+        for currentUrl in self.toVisit:
+           if url is currentUrl:
+               result = True
+               break
+
+        if self.Visited.has_key(url):
+           result = True
+           
+        return result
+        
+
+    def urlCrawler(self, url):
+        """
+        would crawl the url and search for more urls
+        """
+        for currentUrl in re.findall('''href=["'](.[^"']+)["']''', urlopen(myurl).read(), re.I):
+            if not(checkIfInclded(currentUrl)):
+                addUrlToVisit(currentUrl)
+
+    def urlRating(self, url):
+
+        outputNumber = 0
+        if not(self.StartingUrl is url):
+            startingNumber = len(tokenize.generate_tokens(urllib.request.urlparse(self.StartinUrl)[3], '/'))
+            currentNumber = len(tokenize.generate_tokens(urlparse(url)[3], '/'))
+            outputNumber = currentNumber - startingNumber
+        return outputNumber
+
+
+    def crawlWeb(self):
+        """
+        will get new urls ad traverse them
+        """
+        while len(self.toVisit) > 0:
+            currentUrl = self.nextUrl()
+            print("next url "+currentUrl+"\n")
+            self.urlCrawler(currentUrl)
+            self.addVisitedUrl(currentUrl)
+            
+
+    def nextUrl(self):
+        return self.UrlsToVisit[0]
+
+    def createNode(self,currentUrl,subUrl):
+        """
+        will create a node for the given subUrl
+        """
+        self.Graph.add_node(url)
+        #self.toVisit[url] =  n
+        #self.Graph.add_edge(currentUrl,subUrl)
+
+
+
+        
+
