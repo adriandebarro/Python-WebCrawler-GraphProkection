@@ -2,7 +2,7 @@ import re
 import urllib
 import tokenize
 from urllib.request import urlopen
-#import networkx  as nx
+import networkx  as nx
 
 
 class WebCrawler:
@@ -63,13 +63,48 @@ class WebCrawler:
         return result
         
 
-    def urlCrawler(self, url):
+     def urlCrawler(self):
         """
         would crawl the url and search for more urls
         """
-        for currentUrl in re.findall('''href=["'](.[^"']+)["']''', urlopen(myurl).read(), re.I):
-            if not(checkIfInclded(currentUrl)):
-                addUrlToVisit(currentUrl)
+        url = self.UrlsToVisit[0]
+        self.UrlsToVisit.pop(0)
+        self.Visited.append(url)
+        
+        while(1 > 0):
+            myParsed = urlparse(url)
+            print(myParsed,'\n')
+            try:
+                for currentUrl in re.findall('''href=["'](.[^"']+)["']''', str(urlopen(url).read()), re.I):
+                    if(not(''.join(currentUrl[0:4]) == 'http') or
+                       not(''.join(currentUrl[0:5]) == 'https') or
+                        not(''.join(currentUrl[0:4]) == 'www')):
+                        print(myParsed[0]+'//:'+myParsed[1]+str(currentUrl),'\n')
+
+                        currentParsed = urllib.parse.urlparse(currentUrl)
+                        
+                        #if the domains are equal append
+                        if(myParsed[1] == currentParsed[1]):
+                            self.addUrlToVisit(curretUrl)
+                            
+            except ValueError : 
+                print(str(url),'not good')
+            except urllib.error.HTTPError:
+                print(str(url),'not good')
+            except urllib.error.URLError:
+                print(str(url),'not good')
+            except KeyboardInterrupt:
+                print('process interrupted')
+                break
+            
+            if(len(toVisit) > 0):
+                url = toVisit[0]
+                toVisit.pop(0)
+                visited.append(url)
+            else:
+                break
+            
+        print('all urls visited')
 
     def urlRating(self, url):
 
@@ -99,7 +134,8 @@ class WebCrawler:
         """
         will create a node for the given subUrl
         """
-        self.Graph.add_node(url)
+        self.Graph.add_node(subUrl)
+        self.Graph.add_edge(currentUrl,subUrl)
         #self.toVisit[url] =  n
         #self.Graph.add_edge(currentUrl,subUrl)
 
